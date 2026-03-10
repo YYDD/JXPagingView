@@ -542,6 +542,15 @@ extension JXPagingListContainerView: UICollectionViewDataSource, UICollectionVie
 
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
+            ///保证手动归为不会触发scrollViewDidEndDecelerating的情况
+            if willAppearIndex != -1 || willDisappearIndex != -1 {
+                listWillDisappear(at: willAppearIndex)
+                listWillAppear(at: willDisappearIndex)
+                listDidDisappear(at: willAppearIndex)
+                listDidAppear(at: willDisappearIndex)
+                willDisappearIndex = -1
+                willAppearIndex = -1
+            }
             delegate?.listContainerViewDidEndScrolling(self)
         }
     }
